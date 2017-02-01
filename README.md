@@ -1,2 +1,2 @@
-# 599_R
-R codes
+# R codes for PUBPOL 599 C 
+Autumn Yu
