@@ -4,14 +4,6 @@ author: "Autumn"
 date: "2/1/2017"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-echo=FALSE means R is gonna run the command, but hide the codes
-eval=FALSE is used when you want to show a code but not run it
-
 #Session 1 
 import data
 ```{r}
@@ -263,18 +255,23 @@ strangerF=function(x){
 }
 ```
 
-when change is true, answer=answer+value, when change is false, answer=answer-value
+strangerF sums the first value in the list, minus second value, sums the third, minus the fourth and so on. For example, if I have (1,2,3,4,5), strangerF gives the answer of "+1-2+3-4+5"
 
 ```{r}
+A=c(10,20,30,40,50)
+strangerF(A)
+```
+
+
+```{r}
+folderName='data'
+fileName='dataforstrangeF.csv'
 pathToFile='data/dataforstrangeF.csv'
-datastrangeF=read.csv(pathToFile)
-datastrangeF
+dataF=read.csv(pathToFile)
+dataF
 ```
 
-
-a
-```{r}
-
-```
+StrangerF can be applied to the vals2 and vals3 columns because values in these two column are nemeric.
+apply, mapply, Map, Filter, lapply don't work with the function.
 
 
