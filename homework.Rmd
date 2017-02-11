@@ -1,0 +1,280 @@
+---
+title: "homework"
+author: "Autumn"
+date: "2/1/2017"
+output: html_document
+---
+#Session 1 
+import data
+```{r}
+setwd("~/Dropbox/R and Python")
+library(readxl)
+folderName='data'
+fileName='cities.xlsx'
+fileExcel=file.path(folderName,fileName)
+dataFromExcel=read_excel(fileExcel,1) 
+dataFromExcel
+```
+1.most visited in 2015
+```{r}
+head(dataFromExcel[order(-dataFromExcel$visits2015),],1)$city
+```
+or we can use
+```{r}
+dataFromExcel[which.max(dataFromExcel$visits2015),]$city
+```
+2.least visited in Aisa in 2013
+first we want select Asia cities from all regions
+```{r}
+cityAsia=dataFromExcel[dataFromExcel$region=='Asia',]
+cityAsia
+```
+then
+```{r}
+head(cityAsia[order(cityAsia$visits2013),],1)$city
+```
+or 
+```{r}
+cityAsia[which.min(cityAsia$visits2013),]$city
+```
+3. three least visited in Aisa in 2015
+```{r}
+head(cityAsia[order(cityAsia$visits2015),],3)$city
+```
+4. most visited in Aisa in 2013
+```{r}
+cityAsia[which.max(cityAsia$visits2013),]$city
+```
+4. and least visited in Aisa in 2013
+```{r}
+cityAsia[which.min(cityAsia$visits2013),]$city
+```
+#Session 2
+1.most visited in 2015
+```{r}
+Most2015=0
+for (visits2015 in dataFromExcel$visits2015){
+  if (!is.na(visits2015)& Most2015<visits2015 ){
+    Most2015=visits2015
+  } 
+}
+
+dataFromExcel[!is.na(dataFromExcel$visits2015)& dataFromExcel$visits2015==Most2015,]$city
+```
+2.least visited in Aisa in 2013
+```{r}
+cityAsia=dataFromExcel[dataFromExcel$region=='Asia',]
+
+L2013A=100
+visits2013 = cityAsia$visits2013
+
+for(visits2013 in cityAsia$visits2013){
+  if (visits2013<L2013A & !is.na(visits2013)){
+    L2013A=visits2013
+  }
+}
+
+dataFromExcel[!is.na(dataFromExcel$visits2013)& dataFromExcel$visits2013==L2013A,]$city
+
+```
+3. three least visited in Aisa in 2015
+```{r}
+Least2015Asia1=100
+Least2015Asia2=100
+Least2015Asia3=100
+posLeast2015Asia1=c()
+posLeast2015Asia2=c()
+posLeast2015Asia3=c()
+posLeast2015Asia=c()
+
+cityAsia=dataFromExcel[dataFromExcel$region=='Asia',]
+
+numRows=nrow(cityAsia)
+numCols=ncol(cityAsia)
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015<Least2015Asia1 & !is.na(visits2015)){
+    Least2015Asia1=visits2015
+  }
+}
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015==Least2015Asia1){
+    posLeast2015Asia1=c(posLeast2015Asia1,position)
+  }
+}
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015<Least2015Asia2 & !is.na(visits2015) & visits2015>Least2015Asia1){
+    Least2015Asia2=visits2015
+  }
+}
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015==Least2015Asia2){
+    posLeast2015Asia2=c(posLeast2015Asia2,position)
+  }
+}
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015<Least2015Asia3 & !is.na(visits2015) & visits2015>Least2015Asia2){
+    Least2015Asia3=visits2015
+  }
+}
+
+for (position in 1:numRows){
+  visits2015 = cityAsia[position,'visits2015']
+  if(visits2015==Least2015Asia3){
+    posLeast2015Asia3=c(posLeast2015Asia3,position)
+  }
+}
+
+posLeast2015Asia=c(posLeast2015Asia1,posLeast2015Asia2,posLeast2015Asia3)
+cityAsia[posLeast2015Asia,]$city
+```
+#Session 3
+RaiseToPowerPlus 
+```{r}
+RiseToPowerPlus=function(base,exponent=2){
+  result=1
+  if (exponent > 0){
+    for (time in 1:exponent){
+      result=result*base
+    }
+  }
+  if (exponent < 0){
+    exponent=-exponent
+    for (time in 1:exponent){
+      result=result/base
+    }
+  }
+  return(result)
+}
+```
+testing
+```{r}
+RiseToPowerPlus(9,2)
+RiseToPowerPlus(2,-2)
+```
+reduce 'for' loop 
+```{r}
+factors1=function(number){
+  vectorOfAnswers=c() 
+  for (i in 1:sqrt(number)){
+    if ((number %% i) == 0){ 
+      vectorOfAnswers=c(vectorOfAnswers,i,number/i)
+    }
+  }
+  return (vectorOfAnswers) 
+}
+```
+testing
+```{r}
+factors1(4)
+```
+avoid negative values or zeros as input
+```{r}
+factors2=function(number){
+  vectorOfAnswers=c() 
+  if (number<=0){
+    return(print('0 or negative numbers are not accepted'))
+    break
+  }
+  for (i in 1:sqrt(number)){
+    if ((number %% i) == 0){ 
+      vectorOfAnswers=c(vectorOfAnswers,i,number/i)
+    }
+  }
+  return (vectorOfAnswers) 
+}
+```
+testing
+```{r}
+factors2(20.9) 
+factors2(0)
+factors2(-20)
+```
+only positive integer values 
+```{r}
+factors3=function(number){
+  vectorOfAnswers=c() 
+  if (number>0 & number%%1==0){
+    for (i in 1:sqrt(number)){
+      if ((number %% i) == 0){ 
+        vectorOfAnswers=c(vectorOfAnswers,i,number/i)
+      }
+    }
+  return (vectorOfAnswers) 
+  }else {
+    print('only positive intergers are accepted')
+  }
+}
+```
+testing
+```{r}
+factors3(2) 
+factors3(0)
+factors3(3.3)
+```
+extra colums
+```{r}
+functionExtra=function(vct1,vct2){
+  for (val in vct1){
+    sumvct=(vct1+vct2)
+    difvct=(vct1-vct2)
+    mltvct=(vct1*vct2)
+    divvct=(vct1/vct2)
+  }
+  extraDF=data.frame(number1=vct1,number2=vct2,sum=sumvct,difference=difvct,multipilication=mltvct,division=divvct)
+  extraDF
+}
+```
+testing
+```{r}
+functionExtra(factors3(10),factors3(4))
+```
+understand the function
+```{r}
+strangerF=function(x){
+  answer=0
+  change=T
+  for (value in x){
+    if (change){
+      answer=answer+value
+    }else{
+      answer=answer-value
+    }
+    change=!change 
+  }
+  return (answer)
+}
+```
+
+strangerF sums the first value in the list, minus second value, sums the third, minus the fourth and so on. For example, if I have (1,2,3,4,5), strangerF gives the answer of "+1-2+3-4+5"
+
+```{r}
+A=c(10,20,30,40,50)
+strangerF(A)
+```
+
+
+```{r}
+folderName='data'
+fileName='dataforstrangeF.csv'
+pathToFile='data/dataforstrangeF.csv'
+dataF=read.csv(pathToFile)
+dataF
+```
+
+StrangerF can be applied to the vals2 and vals3 columns because values in these two column are nemeric.
+apply doesn't work, becaues it applys StrangerF to each column.(strangerF can't be applied to the vals1 column)
+lappy donsn't work, it applys strangerF by column or by row.(strangerF can't be applied to values in the vals1 column)
+mapply, Map, Filter,don't work.
+
+
+
